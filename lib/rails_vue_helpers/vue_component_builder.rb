@@ -14,9 +14,9 @@ class RailsVueHelpers::VueComponentBuilder
 
   def to_html(&block)
     if block_given?
-      ActiveSupport::SafeBuffer.new("<#{sanitized_component_name} #{attribute_options(props)} #{raw}>#{capture(&block)}</#{sanitized_component_name}>")
+      ActiveSupport::SafeBuffer.new("<#{sanitized_component_name} #{attributes} #{@raw}>#{capture(&block)}</#{sanitized_component_name}>")
     else
-      ActiveSupport::SafeBuffer.new("<#{sanitized_component_name} #{attribute_options(props)} #{raw}></#{sanitized_component_name}>")
+      ActiveSupport::SafeBuffer.new("<#{sanitized_component_name} #{attributes} #{@raw}></#{sanitized_component_name}>")
     end
   end
 
