@@ -1,9 +1,9 @@
 class RailsVueHelpers::VueComponentBuilder
   def self.create(component_name, **props, &block)
-    self.class.new(component_name, **props).to_html(&block)
+    self.class.new(component_name, props).to_html(&block)
   end
 
-  def initialize(component_name, **props)
+  def initialize(component_name, props = {})
     @component_name = component_name
     @props = props
     @raw = @props[:raw]
