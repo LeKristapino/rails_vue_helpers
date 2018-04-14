@@ -1,4 +1,4 @@
-class RailsVueHelpers::VueComponentCreator
+class RailsVueHelpers::VueComponentBuilder
   def self.create(component_name, **props, &block)
     self.class.new(component_name, **props).to_html(&block)
   end
