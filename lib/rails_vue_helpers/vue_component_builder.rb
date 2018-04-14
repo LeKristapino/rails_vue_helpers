@@ -1,41 +1,41 @@
 class RailsVueHelpers::VueComponentBuilder
   def self.create(component_name, **props, &block)
-    self.class.new(component_name, props).to_html(&block)
+    new(component_name, **props).to_html(&block)
   end
 
-  def initialize(component_name, props = {})
+  def initialize(component_name, **props)
     @component_name = component_name
     @props = props
     @raw = @props[:raw]
   end
 
   def to_html(&block)
-    "<#{sanitized_component_name} #{attributes} #{@raw}>#{capture(&block) if block_given?}</#{sanitized_component_name}>".html_safe
+    ActiveSupport::SafeBuffer.new("<#{sanitized_component_name} #{attributes} #{@raw}>#{capture(&block) if block_given?}</#{sanitized_component_name}>")
   end
 
   def sanitized_component_name
-    @component_name.to_s.underscore.tr('_', '-')
+    ActiveSupport::Inflector.underscore(@component_name.to_s).tr('_', '-')
   end
 
   private
 
   def attributes
-    [binded_props, event_props, regular_props].join(' ')
+    [binded_props, event_props, regular_props].flatten.join(' ')
   end
 
   def binded_props
     binded_props = @props[:binded] || {}
-    binded_props.map { |key, value| transpile_binded_prop(key, value) }.join(' ')
+    binded_props.map { |key, value| transpile_binded_prop(key, value) }
   end
 
   def event_props
     event_props = @props[:events] || {}
-    event_props.map { |key, value| transpile_event_prop(key, value) }.join(' ')
+    event_props.map { |key, value| transpile_event_prop(key, value) }
   end
 
   def regular_props
     regular_props = @props.reject { |key, value| [:events, :binded, :raw].include?(key) }
-    regular_props.map { |key, value| transpile_regular_prop(key, value) }.join(' ')
+    regular_props.map { |key, value| transpile_regular_prop(key, value) }
   end
 
   def transpile_regular_prop(key, value)
@@ -51,7 +51,7 @@ class RailsVueHelpers::VueComponentBuilder
   end
 
   def transpile_binded_prop(key,value)
-    normalized_key = key.to_s.underscore.tr('_', '-')
+    normalized_key = ActiveSupport::Inflector.underscore(key.to_s).tr('_', '-')
     normalized_value = value
     unless value.is_a?(String)
       # if there are some single quotes in the text, make them in ASCII
