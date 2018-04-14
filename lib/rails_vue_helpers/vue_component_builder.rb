@@ -1,4 +1,11 @@
+require 'active_support/core_ext/object/blank'
+require 'action_view/helpers/capture_helper'
+require 'action_view/context'
+require 'action_view/buffers'
 class RailsVueHelpers::VueComponentBuilder
+  include ActionView::Helpers::CaptureHelper
+  include ActionView::Context
+
   def self.create(component_name, **props, &block)
     new(component_name, **props).to_html(&block)
   end
