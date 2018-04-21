@@ -1,38 +1,63 @@
 # RailsVueHelpers
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/rails_vue_helpers`. To experiment with that code, run `bin/console` for an interactive prompt.
+This small helper gem allows you to add Vue components to your Rails views with a clean syntax.
 
-TODO: Delete this and the text above, and describe your gem
+Instead of writing
+```ruby
+<some-component v-on:click='doThis' v-bind:vueParam="<%= @some_instance.to_json %>" />
+````
+  you can write
+
+```ruby
+<%= vue_component('someComponent', events: { click: 'doThis'}, binded: { vue_param: @some_instance}) %>
+```
+
+This gem conveniently calls `to_json` on objects, as well as handles cases where parameters include single or double quotes, without screwing up HTML rendering
 
 ## Installation
-
-Add this line to your application's Gemfile:
 
 ```ruby
 gem 'rails_vue_helpers'
 ```
 
-And then execute:
-
-    $ bundle
-
-Or install it yourself as:
-
-    $ gem install rails_vue_helpers
-
 ## Usage
 
-TODO: Write usage instructions here
+`vue_component('componentName', **args)`
 
-## Development
+All arguments, except special keys: `binded:`, `events:`, `raw:` are translated in regular camelCased Vue props
 
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+Events:
 
-## Contributing
+```ruby
+<%= vue_component('someComponent', events: { click: 'doThis'} ) %>
+```
+will result in
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/rails_vue_helpers. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
+```ruby
+<some-component v-on:click='doThis'></some-component>
+```
+
+Binded parameters:
+
+```ruby
+<%= vue_component('someComponent', binded: { some_array: ['a', 'b'], some_boolean: true } ) %>
+```
+will result in
+
+```ruby
+<some-component v-bind:someArray="['a', 'b']", v-bind:someBoolean="true"></some-component>
+```
+
+Directives or custom attributes:
+```ruby
+<%= vue_component('someComponent', raw: 'v-something v-something-else') %>
+```
+will result in
+
+```ruby
+<some-component v-something v-something-else></some-component>
+```
 
 ## License
 
