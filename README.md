@@ -12,7 +12,9 @@ Instead of writing
 <%= vue_component('someComponent', events: { click: 'doThis'}, binded: { vue_param: @some_instance}) %>
 ```
 
-This gem conveniently calls `to_json` on objects, as well as handles cases where parameters include single or double quotes, without screwing up HTML rendering
+This gem conveniently calls `to_json` on objects, as well as handles cases where parameters include single or double quotes, without screwing up HTML rendering.
+
+All you need to do this wrap everything in a Vue initialized container, and you're good to go.
 
 ## Installation
 
@@ -22,12 +24,12 @@ gem 'rails_vue_helpers'
 
 ## Usage
 
-`vue_component('componentName', **args)`
+`vue_component('componentName', **args, &block)`
 
 All arguments, except special keys: `binded:`, `events:`, `raw:` are translated in regular camelCased Vue props
 
 
-Events:
+### Events
 
 ```ruby
 <%= vue_component('someComponent', events: { click: 'doThis'} ) %>
@@ -38,7 +40,7 @@ will result in
 <some-component v-on:click='doThis'></some-component>
 ```
 
-Binded parameters:
+### Binded parameters
 
 ```ruby
 <%= vue_component('someComponent', binded: { some_array: ['a', 'b'], some_boolean: true } ) %>
@@ -49,7 +51,8 @@ will result in
 <some-component v-bind:someArray="['a', 'b']", v-bind:someBoolean="true"></some-component>
 ```
 
-Directives or custom attributes:
+### Directives or custom attributes
+
 ```ruby
 <%= vue_component('someComponent', raw: 'v-something v-something-else') %>
 ```
@@ -58,6 +61,24 @@ will result in
 ```ruby
 <some-component v-something v-something-else></some-component>
 ```
+
+### Wrapper
+
+```ruby
+<%= vue_component('someWrapperComponent') do %>
+  <div>Everything else you need in rails view</div>
+  <%= vue_component('someInnerComponent') %>
+<% end %>
+```
+will result in
+
+```ruby
+<some-wrapper-component>
+  <div>Everything else you need in rails view</div>
+  <some-inner-component></some-inner-component>
+</some-component>
+```
+
 
 ## License
 
