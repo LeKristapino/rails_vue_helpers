@@ -1,14 +1,9 @@
 class RailsVueHelpers::VueComponentBuilder
-  include ActionView::Helpers::CaptureHelper
-  include ActionView::Context
-
-  def self.create(component_name, **props, &block)
-    new(component_name, **props).to_html(&block)
-  end
-
-  def initialize(component_name, **props)
+  delegate :capture, :content_tag, to: :@template
+  def initialize(template, component_name, **props)
     @component_name = component_name
     @props = props
+    @template = template
     @raw = @props[:raw]
   end
 
@@ -57,7 +52,7 @@ class RailsVueHelpers::VueComponentBuilder
     "#{normalized_key}=\"#{normalized_value}\" "
   end
 
-  def transpile_binded_prop(key,value)
+  def transpile_binded_prop(key, value)
     normalized_key = ActiveSupport::Inflector.underscore(key.to_s).tr('_', '-')
     normalized_value = value
     unless value.is_a?(String)
