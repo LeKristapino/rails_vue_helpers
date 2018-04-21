@@ -1,4 +1,4 @@
-# RailsVueHelpers
+# Rails Vue Helpers
 
 This small helper gem allows you to add Vue components to your Rails views with a clean syntax.
 
@@ -83,7 +83,3 @@ will result in
 ## License
 
 The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
-
-## Code of Conduct
-
-Everyone interacting in the RailsVueHelpers project’s codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/[USERNAME]/rails_vue_helpers/blob/master/CODE_OF_CONDUCT.md).
